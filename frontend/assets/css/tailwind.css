@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-primary-50 via-cute-lavender/30 to-cute-peach/30 min-h-screen;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .cute-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-3xl shadow-cute p-6 
+           transition-all duration-300 hover:shadow-cute-lg hover:-translate-y-1
+           border-2 border-primary-100;
+  }
+  
+  .cute-btn {
+    @apply px-6 py-3 rounded-full bg-gradient-to-r from-primary-400 to-primary-500
+           text-white font-semibold shadow-cute
+           transition-all duration-300 hover:shadow-cute-lg hover:scale-105
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .cute-btn-secondary {
+    @apply px-6 py-3 rounded-full bg-white border-2 border-primary-300
+           text-primary-600 font-semibold
+           transition-all duration-300 hover:bg-primary-50 hover:scale-105
+           active:scale-95;
+  }
+  
+  .cute-input {
+    @apply w-full px-4 py-3 rounded-2xl border-2 border-primary-200
+           bg-white/50 focus:bg-white focus:border-primary-400
+           outline-none transition-all duration-300
+           placeholder:text-primary-300;
+  }
+  
+  .cute-title {
+    @apply text-3xl md:text-4xl font-bold 
+           bg-gradient-to-r from-primary-500 to-primary-700 
+           bg-clip-text text-transparent;
+  }
+  
+  .cute-subtitle {
+    @apply text-lg text-primary-600/80;
+  }
+  
+  .like-btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full
+           bg-primary-50 hover:bg-primary-100 transition-all duration-300
+           cursor-pointer select-none;
+  }
+  
+  .like-btn.liked {
+    @apply bg-primary-500 text-white;
+  }
+}
+
+@layer utilities {
+  .text-shadow-cute {
+    text-shadow: 2px 2px 4px rgba(255, 107, 157, 0.3);
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600
+           bg-clip-text text-transparent;
+  }
+}

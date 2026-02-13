@@ -1,0 +1,57 @@
+name: Deploy to Aliyun
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      working-directory: frontend
+      run: npm ci
+    
+    - name: Build frontend
+      working-directory: frontend
+      run: npm run generate
+      env:
+        NUXT_PUBLIC_API_BASE: ${{ secrets.API_BASE }}
+    
+    - name: Install backend dependencies
+      working-directory: backend
+      run: npm ci
+    
+    - name: Deploy to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "frontend/.output/*,backend/*,deploy/*"
+        target: "/var/www/self-intro"
+        strip_components: 0
+    
+    - name: Restart services
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /var/www/self-intro/backend
+          npm install --production
+          pm2 restart all
+          cd /var/www/self-intro/frontend
+          cp -r .output/public/* /var/www/self-intro/frontend/.output/public/
+          sudo nginx -s reload
